@@ -1,43 +1,50 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Code2, Database, Brain, TrendingUp, Instagram, Film } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Github, Play } from "lucide-react";
 
 const projectsData = [
   {
-    title: "Automated Code Review with LLM",
-    description: "An automatic code review tool that streamlines the software development process, enhancing efficiency and maintaining high coding standards to improve overall code quality.",
-    technologies: ["Python", "LangChain", "LLM", "GitLab", "Prompt Engineering"],
-    icon: Code2
+    title: "AI Code Review Assistant",
+    description: "Developed an intelligent code review system using large language models to automatically analyze pull requests, suggest improvements, and identify potential bugs.",
+    technologies: ["Python", "OpenAI", "LangChain", "GitLab API"],
+    github: "https://github.com/mahade315",
+    demo: null
   },
   {
-    title: "Inventory Query System using LLM",
-    description: "Developed a natural language interface to query MySQL databases, enhancing user accessibility and simplifying data retrieval with the power of Large Language Models.",
-    technologies: ["Python", "LangChain", "MySQL", "ChromaDB"],
-    icon: Database
+    title: "Multi-Agent RAG System",
+    description: "Built a sophisticated retrieval-augmented generation system with multiple specialized agents for document analysis, query routing, and response synthesis.",
+    technologies: ["Python", "LangChain", "CrewAI", "ChromaDB", "FAISS"],
+    github: "https://github.com/mahade315",
+    demo: null
+  },
+  {
+    title: "SQUIRREL 2.0",
+    description: "Research implementation of a fair and explainable sequential group recommendation system. Published at DOLAP 2024.",
+    technologies: ["Python", "TensorFlow", "Pandas", "Matplotlib"],
+    github: null,
+    demo: null
+  },
+  {
+    title: "ML Model Interpretability Dashboard",
+    description: "Created an interactive dashboard for visualizing and explaining machine learning model predictions using SHAP values and LIME.",
+    technologies: ["Python", "Streamlit", "SHAP", "Plotly", "Scikit-Learn"],
+    github: "https://github.com/mahade315",
+    demo: null
   },
   {
     title: "GeoBot: Real-time Geolocation Estimation",
     description: "A deep learning system that predicts real-time geolocation of non-GPS samples for LTE tracer, trained on MDT UE GPS location reports.",
     technologies: ["Python", "Neural Networks", "TensorFlow"],
-    icon: Brain
+    github: null,
+    demo: null
   },
   {
     title: "Customer Churn Prediction",
-    description: "Predictive Neural Network model deployed on banking data to forecast customer churn, achieving an 85% accuracy rate for proactive customer retention policy.",
+    description: "Predictive Neural Network model deployed on banking data to forecast customer churn, achieving an 85% accuracy rate for proactive customer retention.",
     technologies: ["Python", "ANN", "TensorFlow", "Keras"],
-    icon: TrendingUp
-  },
-  {
-    title: "Instagram Reach Analysis",
-    description: "An impactful Exploratory Data Analysis on Instagram Reach, revealing key insights and trends for optimizing social media strategy.",
-    technologies: ["Python", "Pandas", "Plotly", "Data Visualization"],
-    icon: Instagram
-  },
-  {
-    title: "Movie Recommendation System",
-    description: "User-based and Item-based Collaborative Filtering approach implemented on MovieLens dataset to provide personalized movie recommendations.",
-    technologies: ["Python", "Collaborative Filtering", "ML"],
-    icon: Film
+    github: null,
+    demo: null
   }
 ];
 
@@ -54,47 +61,63 @@ const Projects = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {projectsData.map((project, index) => {
-              const Icon = project.icon;
-              return (
-                <Card
-                  key={index}
-                  className="p-6 backdrop-blur-sm bg-card/80 border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(120,119,198,0.15)] group"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0">
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                          <Icon className="w-6 h-6 text-primary" />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-foreground mb-2">
-                          {project.title}
-                        </h3>
-                      </div>
-                    </div>
+            {projectsData.map((project, index) => (
+              <Card
+                key={index}
+                className="p-6 backdrop-blur-sm bg-card/80 border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] group"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold text-foreground">
+                    {project.title}
+                  </h3>
 
-                    <p className="text-muted-foreground leading-relaxed">
-                      {project.description}
-                    </p>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {project.description}
+                  </p>
 
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      {project.technologies.map((tech, idx) => (
-                        <Badge
-                          key={idx}
-                          variant="secondary"
-                          className="bg-accent/10 text-accent border-accent/20"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {project.technologies.map((tech, idx) => (
+                      <Badge
+                        key={idx}
+                        variant="secondary"
+                        className="bg-primary/10 text-foreground border-primary/20"
+                      >
+                        {tech}
+                      </Badge>
+                    ))}
                   </div>
-                </Card>
-              );
-            })}
+
+                  <div className="flex gap-3 pt-4">
+                    {project.demo && (
+                      <Button
+                        size="sm"
+                        className="bg-primary hover:bg-primary/90 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                        asChild
+                      >
+                        <a href={project.demo} target="_blank" rel="noopener noreferrer">
+                          <Play className="w-4 h-4 mr-2" />
+                          View Demo
+                        </a>
+                      </Button>
+                    )}
+                    {project.github && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-primary/30 hover:border-primary hover:bg-primary/10"
+                        asChild
+                      >
+                        <a href={project.github} target="_blank" rel="noopener noreferrer">
+                          <Github className="w-4 h-4 mr-2" />
+                          Code
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
