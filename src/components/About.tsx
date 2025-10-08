@@ -1,87 +1,83 @@
 import { Card } from "@/components/ui/card";
-import { GraduationCap, Briefcase, FlaskConical, BookOpen } from "lucide-react";
+import { Briefcase, BookOpen, Brain, Newspaper } from "lucide-react";
+import publicationsData from "@/lib/publications";
 
 const About = () => {
+  const latestPublication = [...publicationsData].sort((a, b) => Number(b.year) - Number(a.year))[0];
+
   const highlights = [
+    // 1. Current Education
     {
-      icon: GraduationCap,
-      title: "Current Education",
-      subtitle: "Doctoral Researcher, Tampere University, Finland",
-      date: "Dec 2024 - Present",
+      icon: "tau-logo",
+      title: "Current Position",
+      subtitle: "Doctor of Philosophy - PhD",
+      date: "Aug 2024 - Present",
       color: "text-primary"
     },
+    // 2. Research Lab
     {
-      icon: Briefcase,
-      title: "Professional Experience",
-      subtitle: "6+ Years in Academia & Industry",
-      description: "Research • Teaching • Development",
-      color: "text-accent"
-    },
-    {
-      icon: FlaskConical,
+      icon: "gpt-lab-logo",
       title: "Research Lab",
       subtitle: "GPT-Lab, Tampere University, Finland",
       description: "Generative AI & Agentic Systems",
       color: "text-primary"
     },
+    // 3. Research Interest
     {
-      icon: BookOpen,
+      icon: Brain,
+      title: "Research Interest",
+      subtitle: "Generative AI",
+      subtitle2: "Software Engineering", 
+      subtitle3: "Natural Language Processing",
+      color: "text-accent"
+    },
+    // 4. Recent News (Dynamic from latest publication)
+    {
+      icon: Newspaper,
       title: "Recent News",
-      subtitle: "Assessing Small Language Models for Code Generation",
-      description: "Submitted to Elsevier (Preprint)",
+      subtitle: latestPublication?.title || "",
+      description: latestPublication ? `${latestPublication.venue}${latestPublication.arxivId ? ` • arXiv:${latestPublication.arxivId}` : ""}` : "",
       color: "text-accent",
       badge: true
     }
   ];
 
   return (
-    <section id="about" className="py-20 bg-secondary/30">
+    <section id="about" className="pt-12 pb-16 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center space-y-4 animate-fade-in mb-12">
             <h2 className="text-4xl md:text-5xl font-bold">
-              Hi, I'm <span className="gradient-text">Toufique</span>
+              Hi, I'm <span className="gradient-text">Mahade</span>
             </h2>
             <div className="h-1 w-24 mx-auto bg-gradient-to-r from-primary to-accent rounded-full" />
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 items-stretch">
             {/* Left: My Journey */}
-            <Card className="p-8 backdrop-blur-sm bg-card/80 border-primary/10">
+            <Card className="p-8 backdrop-blur-sm bg-card/80 border-primary/10 h-full">
               <h3 className="text-2xl font-bold gradient-text mb-6">My Journey</h3>
-              
+
               <div className="space-y-6 text-muted-foreground leading-relaxed">
                 <p>
-                  As a <span className="text-foreground font-semibold">Doctoral Researcher in Computing Sciences</span> at Tampere 
-                  University, I specialize in Generative AI and Agentic Systems. My research centers on designing Agentic 
-                  Retrieval-Augmented Generation (RAG) architectures and Agentic AI Systems — building intelligent agents 
-                  that combine semantic search, knowledge retrieval, and reasoning to tackle complex, real-world problems.
-                </p>
-                
-                <p>
-                  I began my academic journey with a Bachelor's in Computer Science and Engineering, continued with a 
-                  Master's in Data Science, and now focus on Generative AI research. Along the way, I've guided students 
-                  in computer science and worked as a software engineer before beginning my doctoral research.
+                  I'm <span className="text-foreground font-semibold">Md Mahade Hasan</span> (Mahade), a Doctoral Researcher in Computing Sciences at 
+                  Tampere University. I work on <span className="text-foreground font-semibold">Generative AI</span> with a focus on <span className="text-foreground font-semibold">agentic systems</span> and 
+                  <span className="text-foreground font-semibold"> retrieval-augmented generation (RAG)</span>—designing practical AI that can reason over
+                  knowledge, retrieve the right context, and take meaningful actions.
                 </p>
 
                 <p>
-                  At the heart of my work is a simple goal: to <span className="text-foreground font-semibold">bridge research and 
-                  practice</span> by creating AI systems that are context-aware, trustworthy, and genuinely useful in 
-                  real-world decision-making.
+                  My path spans <span className="text-foreground font-semibold">teaching, research, and software development</span>. I've taught and mentored 
+                  students, contributed to research projects, and built applications that turn ideas into real-world AI solutions.
+                </p>
+
+                <p>
+                  Today, my goal is simple: <span className="text-foreground font-semibold">bridge research and practice</span>. I aim to create AI systems 
+                  that are reliable, explainable, and genuinely useful in decision-making.
                 </p>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-border">
-                <p className="text-foreground font-semibold mb-3">Research Focus:</p>
-                <div className="flex flex-wrap gap-2">
-                  {["Small Language Models for Code Generation", "Fairness & Explainability in AI", 
-                    "Retrieval Augmented Generation (RAG)", "Multi-Agent AI Systems"].map((focus) => (
-                    <span key={focus} className="px-3 py-1 rounded-full bg-primary/10 text-sm text-foreground border border-primary/20">
-                      {focus}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              
             </Card>
 
             {/* Right: Highlights */}
@@ -94,18 +90,30 @@ const About = () => {
                 >
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-full bg-primary/10 ${item.color}`}>
-                      <item.icon className="w-6 h-6" />
+                      {item.icon === "tau-logo" ? (
+                        <img src="/tau.png" alt="Tampere University" className="w-6 h-6 dark:invert" />
+                      ) : item.icon === "gpt-lab-logo" ? (
+                        <img src="/GptLablogo.png" alt="GPT Lab" className="w-6 h-6" />
+                      ) : (
+                        <item.icon className="w-6 h-6" />
+                      )}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-1">
                         <h4 className="font-bold text-foreground">{item.title}</h4>
                         {item.badge && (
-                          <span className="px-2 py-0.5 rounded-full bg-accent/10 text-accent text-xs font-medium border border-accent/20">
+                          <span className="px-2 py-0.5 rounded-full bg-accent/10 text-accent text-xs font-medium border border-accent/20 animate-blink">
                             New
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground font-medium mb-1">{item.subtitle}</p>
+                      <p className="text-sm text-muted-foreground font-medium">{item.subtitle}</p>
+                      {item.subtitle2 && (
+                        <p className="text-sm text-muted-foreground font-medium">{item.subtitle2}</p>
+                      )}
+                      {item.subtitle3 && (
+                        <p className="text-sm text-muted-foreground font-medium mb-1">{item.subtitle3}</p>
+                      )}
                       {item.date && (
                         <p className="text-xs text-primary font-medium">{item.date}</p>
                       )}
@@ -117,6 +125,7 @@ const About = () => {
                 </Card>
               ))}
             </div>
+
           </div>
         </div>
       </div>

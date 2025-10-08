@@ -1,14 +1,24 @@
 import { Card } from "@/components/ui/card";
-import { Briefcase } from "lucide-react";
+import { Briefcase, ExternalLink } from "lucide-react";
 
 const experienceData = [
   {
-    title: "Graduate Teaching Assistant",
+    title: "Doctoral Researcher",
     company: "Tampere University",
     location: "Tampere, Finland",
-    period: "January 2025 - April 2025",
-    description: "Supporting PhD-level courses in Computing Sciences department.",
+    period: "August 2024 - Present",
+    description: "Generative AI & Software Engineering",
     type: "Academic"
+  },
+  {
+    title: "Graduate Teaching Assistant (GTA)",
+    company: "Tampere University",
+    location: "",
+    period: "",
+    description: "COMP.CS.530 - Fine-tuning Large Language Models (LLM)",
+    timeline: "Jan 2025 - Apr 2025 | Jan 2026 - Apr 2026",
+    type: "Academic",
+    link: "https://opiskelijanopas.tuni.fi/en/tampere-university/curriculum/course-units/otm-68424c80-193a-4f3e-a347-9c51809ef25e?year=2024"
   },
   {
     title: "Trainee, AI/ML Engineer",
@@ -50,7 +60,7 @@ const Experience = () => {
 
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-accent to-primary hidden md:block" />
+            <div className="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-accent to-primary rounded-full shadow-[0_0_10px_rgba(59,130,246,0.3)] hidden md:block" />
 
             <div className="space-y-8">
               {experienceData.map((exp, index) => (
@@ -59,8 +69,8 @@ const Experience = () => {
                   className="p-6 md:p-8 md:ml-16 backdrop-blur-sm bg-card/80 border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(120,119,198,0.15)] group relative"
                 >
                   {/* Timeline dot */}
-                  <div className="absolute -left-16 top-8 w-12 h-12 rounded-full bg-primary/10 border-4 border-background flex items-center justify-center group-hover:bg-primary/20 transition-colors hidden md:flex">
-                    <Briefcase className="w-5 h-5 text-primary" />
+                  <div className="absolute -left-16 top-8 w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent border-4 border-background flex items-center justify-center group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-300 hidden md:flex">
+                    <Briefcase className="w-5 h-5 text-white drop-shadow-sm" />
                   </div>
 
                   <div className="space-y-3">
@@ -79,12 +89,39 @@ const Experience = () => {
                     </div>
                     
                     <div className="text-muted-foreground text-sm">
-                      <p>{exp.location} • {exp.period}</p>
+                      {exp.location && <p>{exp.location}</p>}
+                      <p>{exp.period}</p>
                     </div>
 
-                    <p className="text-muted-foreground leading-relaxed">
-                      {exp.description}
-                    </p>
+                    {exp.link ? (
+                      <div>
+                        <a
+                          href={exp.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors leading-relaxed"
+                        >
+                          {exp.description}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                        {exp.timeline && (
+                          <p className="text-sm text-muted-foreground font-medium mt-1">
+                            {exp.timeline}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-muted-foreground leading-relaxed">
+                          {exp.description}
+                        </p>
+                        {exp.timeline && (
+                          <p className="text-sm text-muted-foreground font-medium mt-1">
+                            {exp.timeline}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </Card>
               ))}

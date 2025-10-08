@@ -2,9 +2,35 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Linkedin, Github, FileText, Send, ExternalLink } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Github, FileText, Send, ExternalLink, CheckCircle, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+
+// Custom ORCID icon component
+const OrcidIcon = ({ className }: { className?: string }) => (
+  <img src="/ORCID_iD.svg.png" alt="ORCID" className={className} />
+);
+
+// Custom Google Scholar icon component
+const GoogleScholarIcon = ({ className }: { className?: string }) => (
+  <img src="/Google_Scholar_logo.svg" alt="Google Scholar" className={className} />
+);
+
+// Custom LinkedIn icon component
+const LinkedInIcon = ({ className }: { className?: string }) => (
+  <img src="/LinkedIn.svg" alt="LinkedIn" className={className} />
+);
+
+// Custom GitHub icon component
+const GitHubIcon = ({ className }: { className?: string }) => (
+  <img src="/github-mark.svg" alt="GitHub" className={`${className || ''} dark:invert`} />
+);
 
 const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+
   const contactInfo = [
     {
       icon: Mail,
@@ -15,8 +41,8 @@ const Contact = () => {
     {
       icon: Phone,
       label: "Phone",
-      value: "+358 415705792",
-      href: "tel:+358415705792"
+      value: "+358 505700414",
+      href: "tel:+358505700414"
     },
     {
       icon: MapPin,
@@ -28,39 +54,83 @@ const Contact = () => {
 
   const socialLinks = [
     {
-      icon: Linkedin,
+      icon: LinkedInIcon,
       label: "LinkedIn",
       description: "Professional network & updates",
       href: "https://www.linkedin.com/in/mahadehasan/"
     },
     {
-      icon: Github,
+      icon: GitHubIcon,
       label: "GitHub",
       description: "Open source projects & code",
       href: "https://github.com/mahade315"
     },
     {
-      icon: FileText,
+      icon: GoogleScholarIcon,
       label: "Google Scholar",
       description: "Academic publications",
       href: "https://scholar.google.com/citations?user=gBjV5LsAAAAJ&hl=en"
     },
     {
-      icon: FileText,
+      icon: OrcidIcon,
       label: "ORCiD",
       description: "Academic identifier",
       href: "https://orcid.org/0009-0006-5154-7331"
     }
   ];
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setMessage('');
+
     const formData = new FormData(e.currentTarget);
+    const firstName = formData.get("firstName");
+    const lastName = formData.get("lastName");
+    const email = formData.get("email");
     const subject = formData.get("subject");
-    const message = formData.get("message");
-    
-    const mailtoLink = `mailto:mahadehasan5217@gmail.com?subject=${encodeURIComponent(subject as string)}&body=${encodeURIComponent(message as string)}`;
-    window.location.href = mailtoLink;
+    const messageText = formData.get("message");
+
+    try {
+      // Create a well-formatted email body
+      const emailBody = `
+Hello Mahade,
+
+You have received a new message from your website contact form:
+
+Name: ${firstName} ${lastName}
+Email: ${email}
+Subject: ${subject}
+
+Message:
+${messageText}
+
+---
+This message was sent from your personal website contact form.
+      `.trim();
+
+      // Create mailto link with pre-filled content
+      const mailtoLink = `mailto:mahadehasan5217@gmail.com?subject=${encodeURIComponent(`Contact Form: ${subject}`)}&body=${encodeURIComponent(emailBody)}`;
+      
+      // Open the user's default email client
+      window.location.href = mailtoLink;
+      
+      setSubmitStatus('success');
+      setMessage('Your default email client has opened with a pre-filled message. Please send the email to complete the process.');
+      
+      // Reset form after a short delay
+      setTimeout(() => {
+        (e.target as HTMLFormElement).reset();
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error opening email client:', error);
+      setSubmitStatus('error');
+      setMessage('Unable to open email client. Please contact me directly at mahadehasan5217@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -78,10 +148,10 @@ const Contact = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 items-stretch">
             {/* Left: Contact Info */}
-            <div className="space-y-6">
-              <Card className="p-6 backdrop-blur-sm bg-card/80 border-primary/10">
+            <div className="flex flex-col space-y-6">
+              <Card className="p-6 backdrop-blur-sm bg-card/80 border-primary/10 flex-1">
                 <h3 className="text-xl font-bold gradient-text mb-6">Get In Touch</h3>
                 <div className="space-y-4">
                   {contactInfo.map((item, index) => (
@@ -107,7 +177,7 @@ const Contact = () => {
                 </div>
               </Card>
 
-              <Card className="p-6 backdrop-blur-sm bg-card/80 border-primary/10">
+              <Card className="p-6 backdrop-blur-sm bg-card/80 border-primary/10 flex-1">
                 <h3 className="text-xl font-bold gradient-text mb-6">Follow My Work</h3>
                 <div className="space-y-3">
                   {socialLinks.map((link, index) => (
@@ -133,9 +203,9 @@ const Contact = () => {
             </div>
 
             {/* Right: Message Form */}
-            <Card className="p-6 backdrop-blur-sm bg-card/80 border-primary/10">
+            <Card className="p-6 backdrop-blur-sm bg-card/80 border-primary/10 flex flex-col">
               <h3 className="text-xl font-bold gradient-text mb-6">Send a Message</h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="flex flex-col flex-1 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="firstName" className="text-sm font-medium text-foreground mb-2 block">
@@ -190,7 +260,7 @@ const Contact = () => {
                   />
                 </div>
 
-                <div>
+                <div className="flex-1 flex flex-col">
                   <label htmlFor="message" className="text-sm font-medium text-foreground mb-2 block">
                     Message
                   </label>
@@ -198,19 +268,45 @@ const Contact = () => {
                     id="message"
                     name="message"
                     placeholder="Tell me about your project, research idea, or collaboration opportunity..."
-                    rows={5}
+                    rows={12}
                     required
-                    className="border-border focus:border-primary resize-none"
+                    className="border-border focus:border-primary resize-none flex-1"
                   />
                 </div>
+
+                {/* Status Message */}
+                {message && (
+                  <div className={`flex items-center gap-2 p-4 rounded-lg ${
+                    submitStatus === 'success' 
+                      ? 'bg-green-50 border border-green-200 text-green-800' 
+                      : 'bg-red-50 border border-red-200 text-red-800'
+                  }`}>
+                    {submitStatus === 'success' ? (
+                      <CheckCircle className="w-5 h-5" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5" />
+                    )}
+                    <span className="text-sm">{message}</span>
+                  </div>
+                )}
 
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.5)] transition-all"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-auto"
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Send Message
+                    </>
+                  )}
                 </Button>
               </form>
             </Card>
